@@ -1,0 +1,46 @@
+name: Deploy
+
+concurrency:
+  group: production
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        type: environment
+        default: Dev
+        required: true
+      commit:
+        description: "Input commit to deploy"
+        type: string
+        required: true
+      auto_apply_migrations:
+        description: "Apply migrations automatically"
+        type: choice
+        default: "true"
+        required: true
+        options:
+        - "true"
+        - "false"
+
+run-name: Create ${{ inputs.environment }} infrastructure
+
+jobs:
+  verify-inputs:
+    name: Verify Deploy Configuration
+    runs-on: ubuntu-20.04
+    if: ${{ ! inputs.environment == "Dev" }}  # don't enforce restrictions on deploys to DEV
+
+    steps:
+      - name: Deploy kicked off from a Tag
+        if: ${{ ! startsWith(github.ref, 'refs/tags/') }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+            core.setFailed('Deploy workflow must be kicked off from a tag.')
+      # - name: Can only deploy from [latest, dev, preprod, prod, staging] tags
+      #   run: echo "Step NYI"
+      # - name: Commit already deployed to earlier envs in pipeline
+      #   run: echo "Step NYI"
