@@ -31,7 +31,7 @@ jobs:
   verify-inputs:
     name: Verify Deploy Configuration
     runs-on: ubuntu-20.04
-    if: ${{ contains("dev", inputs.environment) }}  # don't enforce restrictions on deploys to DEV
+    if: ${{ ! contains("dev", inputs.environment) }}  # don't enforce restrictions on deploys to DEV
 
     steps:
       - name: Deploy kicked off from a Tag
@@ -40,15 +40,16 @@ jobs:
         with:
           script: |
             core.setFailed('Deploy workflow must be kicked off from a tag.')
-      - name: Test another way
-        if: ${{ github.events.input.environment == "dev"}}
-        run: echo "Yes it worked! - 1"
-      - name: Test another way 2
-        if: ${{ github.events.input.environment == 'dev'}}
-        run: echo "Yes it worked! - 2"
-      - name: Test another way 3
-        if: ${{ github.events.input.environment == dev}}
-        run: echo "Yes it worked! - 3"
+      # - name: Test another way
+      #   if: ${{ github.events.input.environment == "dev"}}
+      #   run: echo "Yes it worked! - 1"
+      # - name: Test another way 2
+      #   if: ${{ github.events.input.environment == 'dev'}}
+      #   run: echo "Yes it worked! - 2"
+      # - name: Test another way 3
+      #   if: ${{ github.events.input.environment == dev}}
+      #   run: echo "Yes it worked! - 3"
+
       # - name: Can only deploy from [latest, dev, preprod, prod, staging] tags
       #   run: echo "Step NYI"
       # - name: Commit already deployed to earlier envs in pipeline
