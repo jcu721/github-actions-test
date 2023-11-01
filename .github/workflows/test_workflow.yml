@@ -31,7 +31,7 @@ jobs:
   verify-inputs:
     name: Verify Deploy Configuration
     runs-on: ubuntu-20.04
-    if: ${{ ! inputs.environment == "dev" }}  # don't enforce restrictions on deploys to DEV
+    if: ${{ ! inputs.environment == dev }}  # don't enforce restrictions on deploys to DEV
 
     steps:
       - name: Deploy kicked off from a Tag
