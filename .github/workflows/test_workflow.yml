@@ -35,7 +35,7 @@ jobs:
     steps:
       - name: Deploy kicked off from a Tag
         if: ${{ ! startsWith(github.ref, 'refs/tags/') }}
-        uses: actions/github-script@v3
+        uses: actions/github-script@v6
         with:
           script: |
             core.setFailed('Deploy workflow must be kicked off from a tag.')
